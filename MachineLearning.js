@@ -153,7 +153,7 @@ class MachineLearning {
         for (let outputIndex = 0; outputIndex < predictedOutputs.Length; outputIndex++) {
           let x = predictedOutputs[outputIndex];
           let y = expectedOutputs[outputIndex];
-          let v = y == 1 ? -System.Math.Log(x) : -System.Math.Log(1 - x);
+          let v = y == 1 ? -Math.log(x) : -Math.log(1 - x);
           cost += !isNaN(v) ? v : 0;
         }
         return cost;
