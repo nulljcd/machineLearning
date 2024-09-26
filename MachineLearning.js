@@ -41,21 +41,21 @@ class MachineLearning {
   }
 
   static Initializer = class {
-    static Zero = class {
+    static Zeros = class {
       initialize(values) {
         for (let valueIndex = 0; valueIndex < values.length; valueIndex++)
           values.set(valueIndex, 0);
       }
     }
 
-    static One = class {
+    static Ones = class {
       initialize(values) {
         for (let valueIndex = 0; valueIndex < values.length; valueIndex++)
           values.set(valueIndex, 1);
       }
     }
 
-    static RandomNormal = class {
+    static RandomNormals = class {
       constructor(mean, stddev) {
         this.mean = mean;
         this.stddev = stddev;
