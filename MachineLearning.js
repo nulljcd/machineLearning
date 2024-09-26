@@ -250,4 +250,8 @@ class MachineLearning {
       return outputs;
     }
   }
+
+  static TrainingSystem = class {
+    
+  }
 }
