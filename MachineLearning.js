@@ -131,9 +131,9 @@ class MachineLearning {
     }
   }
 
-  static Cost = class {
+  static Loss = class {
     static MeanSquaredError = class {
-      cost(predictedOutputs, expectedOutputs) {
+      loss(predictedOutputs, expectedOutputs) {
         let cost = 0;
         for (let outputIndex = 0; outputIndex < predictedOutputs.Length; outputIndex++) {
           let error = predictedOutputs.get(outputIndex) - expectedOutputs.get(outputIndex);
@@ -148,7 +148,7 @@ class MachineLearning {
     }
 
     static CrossEntropy = class {
-      cost(predictedOutputs, expectedOutputs) {
+      loss(predictedOutputs, expectedOutputs) {
         let cost = 0;
         for (let outputIndex = 0; outputIndex < predictedOutputs.Length; outputIndex++) {
           let x = predictedOutputs[outputIndex];
