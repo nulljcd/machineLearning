@@ -5,3 +5,4 @@ A machine learning project in js.
 - Training systems: back propagation, genetic algorithm
 - More activation functions
 - Utility class: cloning
+- port to python
