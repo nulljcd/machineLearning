@@ -63,7 +63,8 @@
     }
     fittestAgentIndex = trainingSystem.fittestAgentIndexes.get(0);
     fittestAgentLoss = trainingSystem.agentLosses.get(fittestAgentIndex);
-    alert((1 - fittestAgentLoss) * 100 + "% accuracy");
+    console.log((1 - fittestAgentLoss) * 100 + "% accuracy");
+    console.log("hyperParams: " + trainingSystem.agents.get(fittestAgentIndex).getHyperParams());
   </script>
 </body>
 
