@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <script src="Project.js"></script>
+  <script>
+    let baseModelLayers = new Project.Array([
+      new Project.Layer.Linear(2),
+      new Project.Layer.Dense(
+        6,
+        new Project.Initializer.RandomNormalDistribution(0, 0.5),
+        new Project.Initializer.RandomNormalDistribution(0, 0.5),
+        new Project.Activation.ReLu()),
+      new Project.Layer.Dense(
+        2,
+        new Project.Initializer.RandomNormalDistribution(0, 0.5),
+        new Project.Initializer.RandomNormalDistribution(0, 0.5),
+        new Project.Activation.SoftMax())]);
+
+    let baseModel = new Project.Model(baseModelLayers);
+
+    let trainingSystem = new Project.TrainingSystem.GeneticAlgorithm(
+      baseModel,
+      3, 2, 0,
+      new Project.TrainingSystem.GeneticAlgorithm.MutateSystem.AddativeRandomNormalDistribution(0, 0.1), 0,
+      new Project.TrainingSystem.GeneticAlgorithm.MutateSystem.AddativeRandomNormalDistribution(0, 0.1), 0);
+
+    let lossFunction = new Project.Loss.MeanSquaredError();
+
+
+
+    let inputs = new Project.Array([
+      new Project.Array([0, 0], Project.DataType.Uint16),
+      new Project.Array([1, 0], Project.DataType.Uint16),
+      new Project.Array([0, 1], Project.DataType.Uint16),
+      new Project.Array([1, 1], Project.DataType.Uint16)
+    ]);
+    let expectedOutputs = new Project.Array([
+      new Project.Array([0, 1], Project.DataType.Uint16),
+      new Project.Array([1, 0], Project.DataType.Uint16),
+      new Project.Array([1, 0], Project.DataType.Uint16),
+      new Project.Array([0, 1], Project.DataType.Uint16)
+    ]);
+
+    trainingSystem.initialize();
+    for (let i = 0; i < 1000; i++) {
+      for (let agentIndex = 0; agentIndex < trainingSystem.numAgents; agentIndex++) {
+        let agent = trainingSystem.agents.get(agentIndex);
+        let totalLoss = 0;
+        for (let caseIndex = 0; caseIndex < 4; caseIndex++) {
+          let outputs = agent.forward(inputs.get(caseIndex));
+          totalLoss += lossFunction.calculate(outputs, expectedOutputs.get(caseIndex)) / 4;
+        }
+        trainingSystem.agentLosses.set(agentIndex, totalLoss);
+      }
+      trainingSystem.step();
+    }
+    fittestAgentIndex = trainingSystem.fittestAgentIndexes.get(0);
+    fittestAgentLoss = trainingSystem.agentLosses.get(fittestAgentIndex);
+    alert((1 - fittestAgentLoss) * 100 + "% accuracy");
+  </script>
+</body>
+
+</html>
