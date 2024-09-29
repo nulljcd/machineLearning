@@ -7,3 +7,4 @@ A simple AI project. It will include neural networks, back propagation, deep gen
 - port to python
 - more layers
 - think of cool name
+- ppo?
