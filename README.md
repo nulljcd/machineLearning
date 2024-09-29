@@ -5,3 +5,4 @@ A simple AI project. It will include neural networks, back propagation, deep gen
 - Training systems: back propagation
 - More activation functions
 - port to python
+- think of cool name
