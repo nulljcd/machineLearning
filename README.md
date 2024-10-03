@@ -2,7 +2,7 @@
 A simple AI project. It will include neural networks, back propagation, deep genetic algorithm, and more. No external libraries, and all in one package.
 
 ## TODO:
-- Training systems: back propagation, genetic algorithm
+- Training systems: back propagation
 - More activation functions
 - more layers
 - ppo?
