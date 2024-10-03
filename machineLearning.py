@@ -243,7 +243,7 @@ class Model:
 
 # %% [markdown]
 # ### training system
-# systems to train nerual networks
+# systems to train neural networks
 # - deep genetic algorithm
 
 # %%
