@@ -4,7 +4,6 @@ A simple AI project. It will include neural networks, back propagation, deep gen
 ## TODO:
 - Training systems: back propagation
 - More activation functions
-- port to python
 - more layers
 - think of cool name
 - ppo?
