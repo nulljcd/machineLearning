@@ -113,6 +113,8 @@ class Network:
 
 
 # simple test
+# xor gate
+# note: low = .4, high = .6 because it works better with tanH
 trainingData = (
   ((0, 0), (.4, .6)),
   ((1, 0), (.6, .4)),
