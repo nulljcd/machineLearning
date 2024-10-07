@@ -1,1 +1,1 @@
-A simple ML project.
+Exporing machine learning.
