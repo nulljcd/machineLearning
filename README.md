@@ -9,5 +9,6 @@ Exporing machine learning.
 - proximal policy optimization (PPO)
 
 ### notes
-- I plan to make it easily portable to any lang, so I have to sacrifice numPy
-- meant to be easy to understand, so not many optimizations
+- I plan to make it easily portable to any lang
+- no external libraries
+- prioritize readability over speed
