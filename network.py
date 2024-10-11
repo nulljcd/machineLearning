@@ -133,7 +133,7 @@ trainingData = shuffle(trainingData)
 network = Network((2, 8, 8, 1), Activation.TanH())
 loss = Loss.MeanSquaredError()
 
-network.train(loss, trainingData, 200, 0.05)
+network.train(loss, trainingData, 100, 0.05)
 
 x0 = []
 y0 = []
