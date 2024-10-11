@@ -11,14 +11,14 @@ class Activation:
       return [1 if z[i] > 0 else 0 for i in range(len(z))]
 
   class LeakyReLu:
-    def __init__(self, alpha):
-      self.alpha = alpha
+    def __init__(self, eta):
+      self.eta = eta
 
     def compute(self, z):
-      return [z[i] if z[i] > 0 else z[i] * self.alpha for i in range(len(z))]
+      return [z[i] if z[i] > 0 else z[i] * self.eta for i in range(len(z))]
   
     def derivative(self, z):
-      return [1 if z[i] > 0 else self.alpha for i in range(len(z))]
+      return [1 if z[i] > 0 else self.eta for i in range(len(z))]
 
   class TanH:
     def compute(self, z):
@@ -34,18 +34,15 @@ class Activation:
 
 class Loss:
   class MeanSquaredError:
-    def compute(self, p, e):
+    def compute(self, x, y):
       loss = 0
-      for i in range(len(p)):
-        error = p[i] - e[i]
+      for i in range(len(x)):
+        error = x[i] - y[i]
         loss += error ** 2
       return loss * 0.5
 
-    def derivative(self, p, e):
-      return [p[i] - e[i] for i in range(len(p))]
-
-    class CrossEntropy:
-      pass
+    def derivative(self, x, y):
+      return [x[i] - y[i] for i in range(len(x))]
 
 class Network:
   def __init__(self, layerSizes, activation):
@@ -54,8 +51,6 @@ class Network:
     self.numLayers = len(self.layerSizes)
     self.weights = [[[random.normalvariate(0, 1) for k in range(self.layerSizes[l])] for j in range(self.layerSizes[l - 1])] for l in range(1, self.numLayers)]
     self.biases = [[0 for j in range(self.layerSizes[l])] for l in range(0, self.numLayers)]
-    self.nablaW = [[[0 for k in range(self.layerSizes[l])] for j in range(self.layerSizes[l - 1])] for l in range(1, self.numLayers)]
-    self.nablaB = [[0 for j in range(self.layerSizes[l])] for l in range(0, self.numLayers)]
 
   def feedForward(self, x):
     for l in range(1, self.numLayers):
@@ -96,86 +91,59 @@ class Network:
       sp = self.activation.derivative(zs[l])
       delta[l] = [sum[i] * sp[i] for i in range(self.layerSizes[l])]
 
+    nablaW = [[[0 for k in range(self.layerSizes[l])] for j in range(self.layerSizes[l - 1])] for l in range(1, self.numLayers)]
+    nablaB = [[0 for j in range(self.layerSizes[l])] for l in range(0, self.numLayers)]
+
     for l in range(0, self.numLayers - 1):
       for j in range(self.layerSizes[l]):
         for k in range(self.layerSizes[l + 1]):
-          self.nablaW[l][j][k] = activations[l][j] * delta[l + 1][k]
+          nablaW[l][j][k] = activations[l][j] * delta[l + 1][k]
     for l in range(0, self.numLayers):
       for j in range(self.layerSizes[l]):
-        self.nablaB[l][j] = delta[l][j]
+        nablaB[l][j] = delta[l][j]
+    
+    return (nablaW, nablaB)
 
-  def applyGradients(self, alpha):
-    for l in range(0, self.numLayers - 1):
-      for j in range(self.layerSizes[l]):
-        for k in range(self.layerSizes[l + 1]):
-          self.weights[l][j][k] -= self.nablaW[l][j][k] * alpha
-    for l in range(0, self.numLayers):
-      for j in range(self.layerSizes[l]):
-        self.biases[l][j] -= self.nablaB[l][j] * alpha
+  def train(self, loss, trainingData, epochs, eta):
+    for i in range(epochs):
+      for j in range(len(trainingData)):
+        nablaW, nablaB = self.backPropagate(trainingData[j][0], trainingData[j][1], loss)
 
-  def getParams(self):
-    params = []
-    for l in range(0, self.numLayers - 1):
-      for j in range(self.layerSizes[l]):
-        for k in range(self.layerSizes[l + 1]):
-          params.append(self.weights[l][j][k])
-    for l in range(0, self.numLayers):
-      for j in range(self.layerSizes[l]):
-        params.append(self.biases[l][j])
-    return params
-
-  def setParams(self, params):
-    i = 0
-    for l in range(0, self.numLayers - 1):
-      for j in range(self.layerSizes[l]):
-        for k in range(self.layerSizes[l + 1]):
-          self.weights[l][j][k] = params[i]
-          i += 1
-    for l in range(0, self.numLayers):
-      for j in range(self.layerSizes[l]):
-        self.biases[l][j] = params[i]
-        i += 1
-    return params
+        for l in range(0, self.numLayers - 1):
+          for j in range(self.layerSizes[l]):
+            for k in range(self.layerSizes[l + 1]):
+              self.weights[l][j][k] -= nablaW[l][j][k] * eta
+        for l in range(0, self.numLayers):
+          for j in range(self.layerSizes[l]):
+            pass
+            self.biases[l][j] -= nablaB[l][j] * eta
 
 
 
+def shuffle(arr):
+  n = len(arr)
+  for i in range(n-1,0,-1):
+    j = random.randint(0,i+1)
+    arr[i],arr[j] = arr[j],arr[i]
+  return arr
 
+trainingData = [[[math.cos(i / 20 * math.tau) * 0.15 + (random.normalvariate(0, 0.1)), math.sin(i / 20 * math.tau) * 0.15 + (random.normalvariate(0, 0.1))], [-1]] for i in range(20)] + [[[math.cos(i/50 * math.tau) * 0.45 + (random.normalvariate(0, 0.1)), math.sin(i/50 * math.tau) * 0.45 + (random.normalvariate(0, 0.1))], [1]] for i in range(50)] + [[[math.cos(i / 80 * math.tau) * 0.75 + (random.normalvariate(0, 0.1)), math.sin(i / 80 * math.tau) * 0.75 + (random.normalvariate(0, 0.1))], [-1]] for i in range(80)]
+trainingData = shuffle(trainingData)
 
-
-
-
-
-
-
-
-
-
-# x0 = [math.cos(i) * 0.8 + random.normalvariate(0, 0.1) for i in range(350)] + [random.normalvariate(0, 0.12) for i in range(50)]
-# y0 = [math.sin(i) * 0.8 + random.normalvariate(0, 0.1) for i in range(350)] + [random.normalvariate(0, 0.12) for i in range(50)]
-# x1 = [math.cos(i) * 0.45 + random.normalvariate(0, 0.08) for i in range(200)]
-# y1 = [math.sin(i) * 0.45 + random.normalvariate(0, 0.08) for i in range(200)]
-
-trainingDataCircle600pts = [[[math.cos(i) * 0.8 + random.normalvariate(0, 0.1), math.sin(i) * 0.8 + random.normalvariate(0, 0.1)], [-1]] for i in range(350)] + \
-  [[[random.normalvariate(0, 0.1), random.normalvariate(0, 0.1)], [-1]] for i in range(50)] + \
-  [[[math.cos(i) * 0.45 + random.normalvariate(0, 0.08), math.sin(i) * 0.45 + random.normalvariate(0, 0.08)], [1]] for i in range(200)]
-
-network = Network((2, 26, 1), Activation.TanH())
+network = Network((2, 8, 8, 1), Activation.TanH())
 loss = Loss.MeanSquaredError()
 
-for i in range(1000):
-  for j in range(600):
-    network.backPropagate(trainingDataCircle600pts[j][0], trainingDataCircle600pts[j][1], loss)
-    network.applyGradients(0.05)
+network.train(loss, trainingData, 200, 0.05)
 
 x0 = []
 y0 = []
 x1 = []
 y1 = []
 
-for i in range(40):
-  for j in range(40):
-    x = i / 20 - 1
-    y = j / 20 - 1
+for i in range(80):
+  for j in range(80):
+    x = i / 40 - 1
+    y = j / 40 - 1
     output = network.feedForward([x, y])[0]
     if output < 0:
       x0.append(x)
@@ -184,8 +152,23 @@ for i in range(40):
       x1.append(x)
       y1.append(y)
 
+x2 = []
+y2 = []
+x3 = []
+y3 = []
+
+for i in range(len(trainingData)):
+  if (trainingData[i][1][0] < 0):
+    x2.append(trainingData[i][0][0])
+    y2.append(trainingData[i][0][1])
+  else:
+    x3.append(trainingData[i][0][0])
+    y3.append(trainingData[i][0][1])
+
 fig, ax = plt.subplots()
-ax.plot(x0, y0, '.')
-ax.plot(x1, y1, '.')
+ax.plot(x0, y0, 'o')
+ax.plot(x1, y1, 'o')
+ax.plot(x2, y2, 'o')
+ax.plot(x3, y3, 'o')
 ax.set(xlim=(-1, 1), ylim=(-1, 1))
 plt.show()
