@@ -1,6 +1,11 @@
 import math
 import random
 
+def shuffle(items):
+  for i in range(len(items)-1, 1, -1):
+    j = random.randrange(i)
+    items[j], items[i] = items[i], items[j]
+
 class Activation:
   class ReLu:
     def compute(self, z):
@@ -14,10 +19,10 @@ class Activation:
       self.alpha = alpha
 
     def compute(self, z):
-      return [z[i] if z[i] > 0 else z[i] * self.eta for i in range(len(z))]
+      return [z[i] if z[i] > 0 else z[i] * self.alpha for i in range(len(z))]
   
     def derivative(self, z):
-      return [1 if z[i] > 0 else self.eta for i in range(len(z))]
+      return [1 if z[i] > 0 else self.alpha for i in range(len(z))]
 
   class TanH:
     def compute(self, z):
@@ -126,3 +131,14 @@ class Network:
         gradientB[l][j] = zb * delta[l][j]
     
     return (gradientW, gradientB)
+
+  def applyGradients(self, gradients, eta):
+    gradientW, gradientB = gradients
+
+    for l in range(1, self.numLayers):
+      for k in range(self.layerSizes[l - 1]):
+        for j in range(self.layerSizes[l]):
+          self.weights[l - 1][k][j] -= gradientW[l - 1][k][j] * eta
+    for l in range(0, self.numLayers):
+      for j in range(self.layerSizes[l]):
+        self.biases[l][j] -= gradientB[l][j] * eta
