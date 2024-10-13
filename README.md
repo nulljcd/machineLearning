@@ -5,7 +5,7 @@ Exporing machine learning.
 - artificial neural network (ANN)
 - deep genetic algorithm (DeepGA), neuroevolution of augmenting topologies (NEAT)
 - back propagation
-- stochastic gradient descent (SDG), adaptable moment estimation (ADAM) and other learning acceration techniques
+- stochastic gradient descent (SGD), adaptable moment estimation (ADAM) and other learning acceration techniques
 - proximal policy optimization (PPO)
 
 ### notes
