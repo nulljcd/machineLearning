@@ -22,22 +22,27 @@ class Activation:
   class TanH:
     def compute(self, z):
       a = [0 for i in range(len(z))]
+
       for i in range(len(z)):
         e2 = math.exp(2 * z[i])
         a[i] = (e2 - 1) / (e2 + 1)
+
       return a
 
     def derivative(self, z):
       t = self.compute(z)
+
       return [1 - t[i] * t[i] for i in range(len(z))]
 
 class Cost:
   class MeanSquaredError:
     def compute(self, a, y):
       cost = 0
+
       for i in range(len(a)):
         error = a[i] - y[i]
         cost += error ** 2
+
       return cost * 0.5
 
     def derivative(self, a, y):
@@ -59,6 +64,7 @@ class Network:
         for k in range(self.layerSizes[l - 1]):
           z[j] += a[k] * self.weights[l - 1][k][j]
       a = self.activation.compute(z)
+    
     return a
 
   def backPropagate(self, x, y, cost):
