@@ -3,9 +3,9 @@ Exporing machine learning.
 
 ### I plan to implement:
 - artificial neural network (ANN)
-- deep genetic algorithm (DeepGA), neuroevolution of augmenting topologies (NEAT)
 - back propagation
-- stochastic gradient descent (SGD), adaptable moment estimation (ADAM) and other learning acceration techniques
+- deep genetic algorithm (DeepGA), neuroevolution of augmenting topologies (NEAT)
+- stochastic gradient descent (SGD), adaptable moment estimation (ADAM) and other learning acceleration techniques
 - proximal policy optimization (PPO)
 
 ### notes
