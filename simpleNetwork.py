@@ -1,6 +1,5 @@
 import math
 import random
-import matplotlib.pyplot as plt
 
 class Activation:
   class ReLu:
@@ -169,7 +168,8 @@ class Network:
 
 
 
-
+# test
+import matplotlib.pyplot as plt
 
 def shuffle(array):
   for i in range(len(array)-2, 0, -1):
@@ -189,6 +189,8 @@ for i in range(100):
   for j in range(len(trainingData)):
     gradients = network.backPropagate(trainingData[j][0], trainingData[j][1], cost)
     network.applyGradients(gradients, 0.1)
+
+
 
 fig, ax = plt.subplots()
 
