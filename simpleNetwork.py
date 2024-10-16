@@ -111,7 +111,6 @@ class Network:
     return a
 
   def backPropagate(self, x, y, cost):
-    # feed forward
     zs = [None]
     a = x
     activations = [a]
@@ -127,47 +126,31 @@ class Network:
       zs.append(z)
       activations.append(a)
 
-    # delta = (del c / del a last) = (del z / del a last) (del a / del z) (del c / del a)
     delta = [[0 for j in range(self.layerSizes[l])] for l in range(0, self.numLayers)]
 
-    # last layer delta
-    # note: no (del z / del a last) for the last layer
-    # partial derivative (del a / del z)
     az = self.ouputActivation.derivative(zs[self.numLayers - 1])
-    # partial derivative (del c / del a)
     ca = cost.derivative(activations[self.numLayers - 1], y)
-    # chain rule (del a / del z) (del c / del a)
     delta[self.numLayers - 1] = [az[j] * ca[j] for j in range(self.layerSizes[self.numLayers - 1])]
 
-    # back propagation
     for l in range(self.numLayers - 1, 1, -1):
       sum = [0 for i in range(self.layerSizes[l - 1])]
       for k in range(self.layerSizes[l - 1]):
         for j in range(self.layerSizes[l]):
-          # partial derivative (del z / del a last)
           zal = self.weights[l - 1][k][j]
           sum[k] += zal * delta[l][j]
-      # partial derivative (del a / del z)
       az = self.activation.derivative(zs[l - 1])
-      # chain rule (del z / del a last) (del a / del z) (del c / del a)
       delta[l - 1] = [sum[k] * az[k] for k in range(self.layerSizes[l - 1])]
 
-    # nablaW = (del c / del w) = (del z / del w) (del c / del a last) 
     nablaW = [[[0 for j in range(self.layerSizes[l])] for k in range(self.layerSizes[l - 1])] for l in range(1, self.numLayers)]
-    # nablaB = (del c / del b) = (del z / del b) (del c / del a last) 
     nablaB = [[0 for j in range(self.layerSizes[l])] for l in range(0, self.numLayers)]
 
     for l in range(1, self.numLayers):
       for k in range(self.layerSizes[l - 1]):
         for j in range(self.layerSizes[l]):
-          # partial derivative (del z / del w)
-          zw = activations[l - 1][k]
-          nablaW[l - 1][k][j] = zw * delta[l][j]
+          nablaW[l - 1][k][j] = activations[l - 1][k] * delta[l][j]
     for l in range(0, self.numLayers):
       for j in range(self.layerSizes[l]):
-        # partial derivative (del z / del b)
-        zb = 1
-        nablaB[l][j] = zb * delta[l][j]
+        nablaB[l][j] = delta[l][j]
     
     return (nablaW, nablaB)
 
@@ -181,6 +164,11 @@ class Network:
     for l in range(0, self.numLayers):
       for j in range(self.layerSizes[l]):
         self.biases[l][j] -= nablaB[l][j] * eta
+
+
+
+
+
 
 
 def shuffle(array):
