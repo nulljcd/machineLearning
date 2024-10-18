@@ -2,17 +2,6 @@ import math
 import random
 
 class Activation:
-  class ReLu:
-    def __init__(self, negativeSlope = 0, maxValue = None):
-      self.negativeSlope = negativeSlope
-      self.maxValue = maxValue
-      
-    def compute(self, z):
-      return [(z[j] if self.maxValue != None and z[j] <= self.maxValue else self.maxValue) if z[j] > 0 else z[j] * self.negativeSlope for j in range(len(z))]
-  
-    def derivative(self, z):
-      return [(1 if self.maxValue != None and z[j] <= self.maxValue else 0) if z[j] > 0 else self.negativeSlope for j in range(len(z))]
-
   class TanH:
     def compute(self, z):
       a = [0 for j in range(len(z))]
@@ -56,10 +45,10 @@ class Cost:
 
 
 class Network:
-  def __init__(self, layerSizes, activation, ouputActivation, cost):
+  def __init__(self, layerSizes, activation, outputActivation, cost):
     self.layerSizes = layerSizes
     self.activation = activation
-    self.ouputActivation = ouputActivation
+    self.outputActivation = outputActivation
     self.cost = cost
     self.numLayers = len(self.layerSizes)
     self.weights = [[[random.normalvariate(0, 1) / math.sqrt(self.layerSizes[l - 1]) for j in range(self.layerSizes[l])] for k in range(self.layerSizes[l - 1])] for l in range(1, self.numLayers)]
@@ -74,7 +63,7 @@ class Network:
         z[j] = self.biases[l][j]
         for k in range(self.layerSizes[l - 1]):
           z[j] += a[k] * self.weights[l - 1][k][j]
-      a = self.activation.compute(z) if l != self.numLayers - 1 else self.ouputActivation.compute(z)
+      a = self.activation.compute(z) if l != self.numLayers - 1 else self.outputActivation.compute(z)
     return a
 
   def backPropagate(self, a, y):
@@ -86,11 +75,11 @@ class Network:
         z[j] = self.biases[l][j]
         for k in range(self.layerSizes[l - 1]):
           z[j] += a[k] * self.weights[l - 1][k][j]
-      a = self.activation.compute(z) if l != self.numLayers - 1 else self.ouputActivation.compute(z)
+      a = self.activation.compute(z) if l != self.numLayers - 1 else self.outputActivation.compute(z)
       zs.append(z)
       activations.append(a)
     error = [[0 for j in range(self.layerSizes[l])] for l in range(0, self.numLayers)]
-    aPrime = self.ouputActivation.derivative(zs[self.numLayers - 1])
+    aPrime = self.outputActivation.derivative(zs[self.numLayers - 1])
     cPrime = self.cost.derivative(activations[self.numLayers - 1], y)
     error[self.numLayers - 1] = [aPrime[j] * cPrime[j] for j in range(self.layerSizes[self.numLayers - 1])]
     for l in range(self.numLayers - 1, 1, -1):
@@ -114,8 +103,9 @@ class Network:
 
 
 
+
 network = Network(
-  (1, 1),
-  Activation.ReLu(negativeSlope = 0.1),
+  (2, 6, 2),
+  Activation.TanH(),
   Activation.SoftMax(),
   Cost.MeanSquaredError())
