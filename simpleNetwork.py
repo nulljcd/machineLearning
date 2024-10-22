@@ -43,7 +43,6 @@ class Cost:
     def derivative(self, a, y):
       return [a[j] - y[j] for j in range(len(a))]
 
-
 class Network:
   def __init__(self, layerSizes, activation, outputActivation, cost):
     self.layerSizes = layerSizes
@@ -99,13 +98,10 @@ class Network:
 
 
 
-
-
-
-
-
 network = Network(
-  (2, 6, 2),
+  (1, 1),
   Activation.TanH(),
   Activation.SoftMax(),
   Cost.MeanSquaredError())
+
+print(network.feedForward([1]))
