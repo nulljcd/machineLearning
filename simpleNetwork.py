@@ -37,7 +37,7 @@ class Cost:
       cost = 0
       for j in range(len(a)):
         error = a[j] - y[j]
-        cost += error ** 2
+        cost += error * error
       return cost * 0.5
 
     def derivative(self, a, y):
