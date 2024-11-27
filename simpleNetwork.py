@@ -96,12 +96,19 @@ class Network:
       for j in range(self.layerSizes[l]):
         self.gradientB[l][j] = error[l][j]
 
+  def applyGradients(self, eta):
+    for l in range(1, self.numLayers):
+      for k in range(self.layerSizes[l - 1]):
+        for j in range(self.layerSizes[l]):
+          self.weights[l - 1][k][j] -= self.gradientW[l - 1][k][j] * eta
+    for l in range(0, self.numLayers):
+      for j in range(self.layerSizes[l]):
+        self.biases[l][j] -= self.gradientB[l][j] * eta
+
 
 
 network = Network(
   (1, 1),
   Activation.TanH(),
-  Activation.SoftMax(),
+  Activation.TanH(),
   Cost.MeanSquaredError())
-
-print(network.feedForward([1]))
