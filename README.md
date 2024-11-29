@@ -7,7 +7,7 @@ Exporing machine learning.
 - neuroevolution and proximal policy optimization (PPO)
 
 ## examples
-curve fitting https://htmlpreview.github.io/?https://github.com/nulljcd/machineLearning/blob/master/examples/curveFitting/index.html
+curve fitting https://nulljcd.github.io/machineLearning/examples/curveFitting/
 
 ### notes:
 - easily portable to any lang
