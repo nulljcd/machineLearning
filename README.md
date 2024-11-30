@@ -6,7 +6,7 @@ Exporing machine learning.
 - stochastic gradient descent (SGD) and other learning acceleration techniques
 - neuroevolution and proximal policy optimization (PPO)
 
-## examples
+## online demos 
 curve fitting https://nulljcd.github.io/machineLearning/examples/curveFitting/
 
 ### notes:
