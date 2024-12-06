@@ -240,19 +240,26 @@ class MachineLearning {
         for (let j = 0; j < this.layerSizes[l]; j++)
           this.gradientB[l][j] = error[l][j];
     }
-
-    applyGradients(eta) {
-      for (let l = 1; l < this.numLayers; l++)
-        for (let k = 0; k < this.layerSizes[l - 1]; k++)
-          for (let j = 0; j < this.layerSizes[l]; j++)
-            this.weights[l - 1][k][j] -= this.gradientW[l - 1][k][j] * eta;
-      for (let l = 0; l < this.numLayers; l++)
-        for (let j = 0; j < this.layerSizes[l]; j++)
-          this.biases[l][j] -= this.gradientB[l][j] * eta;
-    }
   }
 
   static Optimizer = class {
+    static GradientDescent = class {
+      constructor(model, eta) {
+        this.model = model;
+        this.eta = eta;
+      }
+
+      applyGradients() {
+        for (let l = 1; l < this.model.numLayers; l++)
+          for (let k = 0; k < this.model.layerSizes[l - 1]; k++)
+            for (let j = 0; j < this.model.layerSizes[l]; j++)
+              this.model.weights[l - 1][k][j] -= this.model.gradientW[l - 1][k][j] * this.eta;
+        for (let l = 0; l < this.model.numLayers; l++)
+          for (let j = 0; j < this.model.layerSizes[l]; j++)
+            this.model.biases[l][j] -= this.model.gradientB[l][j] * this.eta;
+      }
+    }
+
     static RMSProp = class {
       constructor(model, eta, beta, epsilon, momentum) {
         this.model = model;
@@ -260,7 +267,7 @@ class MachineLearning {
         this.beta = beta;
         this.epsilon = epsilon;
         this.momentum = momentum;
-    
+
         this.vW = new Array();
         this.vB = new Array();
         this.vWMomentum = new Array();
@@ -280,23 +287,23 @@ class MachineLearning {
           this.vBMomentum.push(new Float32Array(this.model.layerSizes[l]));
         }
       }
-    
+
       applyGradients() {
         for (let l = 1; l < this.model.numLayers; l++) {
           for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
             for (let j = 0; j < this.model.layerSizes[l]; j++) {
-              const gradientW = this.model.gradientW[l - 1][k][j];
+              let gradientW = this.model.gradientW[l - 1][k][j];
               this.vW[l - 1][k][j] = this.beta * this.vW[l - 1][k][j] + (1 - this.beta) * gradientW ** 2;
               this.vWMomentum[l - 1][k][j] = this.momentum * this.vWMomentum[l - 1][k][j] + (1 - this.momentum) * gradientW;
-              const adjustedLearningRateW = this.eta / (Math.sqrt(this.vW[l - 1][k][j] + this.epsilon));
+              let adjustedLearningRateW = this.eta / (Math.sqrt(this.vW[l - 1][k][j] + this.epsilon));
               this.model.weights[l - 1][k][j] -= adjustedLearningRateW * (this.vWMomentum[l - 1][k][j]);
             }
           }
           for (let j = 0; j < this.model.layerSizes[l]; j++) {
-            const gradientB = this.model.gradientB[l - 1][j];
+            let gradientB = this.model.gradientB[l - 1][j];
             this.vB[l - 1][j] = this.beta * this.vB[l - 1][j] + (1 - this.beta) * gradientB ** 2;
             this.vBMomentum[l - 1][j] = this.momentum * this.vBMomentum[l - 1][j] + (1 - this.momentum) * gradientB;
-            const adjustedLearningRateB = this.eta / (Math.sqrt(this.vB[l - 1][j] + this.epsilon));
+            let adjustedLearningRateB = this.eta / (Math.sqrt(this.vB[l - 1][j] + this.epsilon));
             this.model.biases[l - 1][j] -= adjustedLearningRateB * (this.vBMomentum[l - 1][j]);
           }
         }
