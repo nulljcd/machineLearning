@@ -6,7 +6,7 @@ Exporing machine learning.
 - Well structured and modularized for maintenance and expansion
 - No external libraries
 
-## example usage
+### example usage
 simple xor gate
 ```js
 // create data
