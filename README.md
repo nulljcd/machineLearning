@@ -3,7 +3,7 @@ Exporing machine learning.
 
 - artificial neural network
 - backpropagation
-- RMSProp and other learning acceleration techniques
+- RMSProp and other optimizers
 - neuroevolution
 
 ## online demos 
