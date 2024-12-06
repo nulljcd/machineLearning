@@ -3,7 +3,7 @@ Exporing machine learning.
 
 - vanilla fully connected feed forward neural network
 - backpropagation
-- RMSProp and other optimizers
+- optimizers
 - neuroevolution
 
 ## online demos 
