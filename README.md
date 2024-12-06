@@ -7,9 +7,9 @@ Exporing machine learning.
 - neuroevolution
 
 ## online demos 
+curve fitting (coming soon)
 
-
-### notes:
+## notes:
 - easily portable to any lang
 - no external libraries
 - prioritize readability over speed
