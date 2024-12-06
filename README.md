@@ -1,10 +1,10 @@
 # machineLearning
 Exporing machine learning.
 
-- vanilla fully connected feed forward neural network
-- backpropagation
-- optimizers
-- neuroevolution
+## MachineLearning.js overview
+- A good base for use ONLY with vanilla neural networks
+- Well structured and modularized for maintenance and expansion
+- No external libraries
 
 ## example usage
 simple xor gate
@@ -54,9 +54,3 @@ for (let i = 0; i < 100; i++)
 for (let j = 0; j < data.length; j++)
   console.log(model.feedForward(data[j][0]));
 ```
-
-
-## notes:
-- easily portable to any lang
-- no external libraries
-- prioritize readability over speed
