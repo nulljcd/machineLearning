@@ -35,7 +35,7 @@ let optimizer = new MachineLearning.Optimizer.AdamW(
   0.9, // beta1
   0.999, // beta2
   1e-8, // epsilon
-  0.001 // lanmbda
+  0.001 // lambda
 );
 
 
