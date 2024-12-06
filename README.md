@@ -20,15 +20,23 @@ let data = [
 
 // create AI
 let model = new MachineLearning.Model(
-  [2, 6, 2],
-  new MachineLearning.Activation.LeakyReLu(0.1),
-  new MachineLearning.Activation.LeakyReLu(0.1),
-  new MachineLearning.WeightInitializer.He(),
-  new MachineLearning.BiasInitializer.Constant(0.1));
+  [2, 6, 2], // layer sizes
+  new MachineLearning.Activation.LeakyReLu(0.1), // activation
+  new MachineLearning.Activation.LeakyReLu(0.1), // output activation
+  new MachineLearning.WeightInitializer.He(), // weight initializer
+  new MachineLearning.BiasInitializer.Constant(0.1) // bias initializer
+);
 
 let cost = new MachineLearning.Cost.MeanSquaredError();
 
-let optimizer = new MachineLearning.Optimizer.AdamW(model, 0.03, 0.9, 0.999, 1e-8, 0.001);
+let optimizer = new MachineLearning.Optimizer.AdamW(
+  model, // model
+  0.03, // eta
+  0.9, // beta1
+  0.999, // beta2
+  1e-8, // epsilon
+  0.001 // lanmbda
+);
 
 
 
