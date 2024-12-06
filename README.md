@@ -1,7 +1,7 @@
 # machineLearning
 Exporing machine learning.
 
-- artificial neural network
+- vanilla fully connected feed forward neural network
 - backpropagation
 - RMSProp and other optimizers
 - neuroevolution
