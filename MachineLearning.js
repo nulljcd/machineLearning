@@ -261,11 +261,11 @@ class MachineLearning {
     }
 
     static RMSProp = class {
-      constructor(model, eta, beta, momentum, epsilon, lambda) {
+      constructor(model, eta, beta, rho, epsilon, lambda) {
         this.model = model;
         this.eta = eta;
         this.beta = beta;
-        this.momentum = momentum;
+        this.rho = rho;
         this.epsilon = epsilon;
         this.lambda = lambda;
 
@@ -296,7 +296,7 @@ class MachineLearning {
               let gradientW = this.model.gradientW[l - 1][k][j];
               gradientW += this.lambda * this.model.weights[l - 1][k][j];
               this.vW[l - 1][k][j] = this.beta * this.vW[l - 1][k][j] + (1 - this.beta) * gradientW ** 2;
-              this.vWMomentum[l - 1][k][j] = this.momentum * this.vWMomentum[l - 1][k][j] + (1 - this.momentum) * gradientW;
+              this.vWMomentum[l - 1][k][j] = this.rho * this.vWMomentum[l - 1][k][j] + (1 - this.rho) * gradientW;
               let adjustedLearningRateW = this.eta / (Math.sqrt(this.vW[l - 1][k][j] + this.epsilon));
               this.model.weights[l - 1][k][j] -= adjustedLearningRateW * (this.vWMomentum[l - 1][k][j]);
             }
@@ -306,7 +306,7 @@ class MachineLearning {
           for (let j = 0; j < this.model.layerSizes[l]; j++) {
             let gradientB = this.model.gradientB[l][j];
             this.vB[l][j] = this.beta * this.vB[l][j] + (1 - this.beta) * gradientB ** 2;
-            this.vBMomentum[l][j] = this.momentum * this.vBMomentum[l][j] + (1 - this.momentum) * gradientB;
+            this.vBMomentum[l][j] = this.rho * this.vBMomentum[l][j] + (1 - this.rho) * gradientB;
             let adjustedLearningRateB = this.eta / (Math.sqrt(this.vB[l][j] + this.epsilon));
             this.model.biases[l][j] -= adjustedLearningRateB * (this.vBMomentum[l][j]);
           }
