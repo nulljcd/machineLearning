@@ -260,7 +260,7 @@ class MachineLearning {
       }
     }
 
-    static RMSProp = class {
+    static RMSPropWithMomentum = class {
       constructor(model, eta, beta, epsilon, momentum) {
         this.model = model;
         this.eta = eta;
