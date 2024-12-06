@@ -75,20 +75,20 @@ class Neuroevolution {
       this.numLayers = this.layerSizes.length;
       this.numWeights = 0;
       this.numBiases = 0;
-      this.numHyperParameters = 0;
+      this.numParameters = 0;
       for (let l = 1; l < this.numLayers; l++)
         for (let j = 0; j < this.layerSizes[l]; j++) {
           this.numBiases++;
           for (let k = 0; k < this.layerSizes[l - 1]; k++)
             this.numWeights++;
         }
-      this.numHyperParameters = this.numWeights + this.numBiases;
-      this.hyperParameters = new Float32Array(this.numHyperParameters);
+      this.numParameters = this.numWeights + this.numBiases;
+      this.parameters = new Float32Array(this.numParameters);
     }
 
     initialize() {
-      for (let i = 0; i < this.numHyperParameters; i++)
-        this.hyperParameters[i] = Neuroevolution.Utils.gaussianRandom(0, 1);
+      for (let i = 0; i < this.numParameters; i++)
+        this.parameters[i] = Neuroevolution.Utils.gaussianRandom(0, 1);
     }
 
     feedForward(a) {
@@ -97,10 +97,10 @@ class Neuroevolution {
       for (let l = 1; l < this.numLayers; l++) {
         let z = new Float32Array(this.layerSizes[l]);
         for (let j = 0; j < this.layerSizes[l]; j++) {
-          z[j] = this.hyperParameters[biasIndex];
+          z[j] = this.parameters[biasIndex];
           biasIndex++;
           for (let k = 0; k < this.layerSizes[l - 1]; k++) {
-            z[j] += a[k] * this.hyperParameters[weightIndex];
+            z[j] += a[k] * this.parameters[weightIndex];
             weightIndex++;
           }
         }
@@ -109,17 +109,17 @@ class Neuroevolution {
       return a;
     }
 
-    exportHyperParameters() {
-      let hyperParameters = "";
-      for (let i = 0; i < this.numHyperParameters; i++)
-        hyperParameters += `${this.hyperParameters[i]} `;
-      return hyperParameters.slice(0, hyperParameters.length - 1);
+    exportParameters() {
+      let parameters = "";
+      for (let i = 0; i < this.numParameters; i++)
+        parameters += `${this.parameters[i]} `;
+      return parameters.slice(0, parameters.length - 1);
     }
 
-    importHyperParameters(hyperParameters) {
-      hyperParameters = hyperParameters.split(" ").map(Number);
-      for (let i = 0; i < this.numHyperParameters; i++)
-        this.hyperParameters[i] = hyperParameters[i];
+    importParameters(parameters) {
+      parameters = parameters.split(" ").map(Number);
+      for (let i = 0; i < this.numParameters; i++)
+        this.parameters[i] = parameters[i];
     }
   }
 
@@ -143,16 +143,16 @@ class Neuroevolution {
 
     step() {
       this.fittestAgentsIndexes.sort((a, b) => { return this.agentFitnesses[b] - this.agentFitnesses[a]; });
-      this.model.hyperParameters = this.agents[this.fittestAgentsIndexes[0]].hyperParameters;
-      let fittestAgentsHyperParameters = new Float32Array(this.model.numHyperParameters * 2);
+      this.model.parameters = this.agents[this.fittestAgentsIndexes[0]].parameters;
+      let fittestAgentsParameters = new Float32Array(this.model.numParameters * 2);
       for (let i = 0; i < this.numParents; i++)
-        for (let j = 0; j < this.model.numHyperParameters; j++)
-          fittestAgentsHyperParameters[j + i * this.model.numHyperParameters] = this.agents[this.fittestAgentsIndexes[i]].hyperParameters[j];
+        for (let j = 0; j < this.model.numParameters; j++)
+          fittestAgentsParameters[j + i * this.model.numParameters] = this.agents[this.fittestAgentsIndexes[i]].parameters[j];
       for (let i = 0; i < this.numAgents; i++)
-        for (let j = 0; j < this.model.numHyperParameters; j++) {
-          this.agents[i].hyperParameters[j] = fittestAgentsHyperParameters[j + Math.floor(Math.random() * this.numParents) * this.model.numHyperParameters];
+        for (let j = 0; j < this.model.numParameters; j++) {
+          this.agents[i].parameters[j] = fittestAgentsParameters[j + Math.floor(Math.random() * this.numParents) * this.model.numParameters];
           if (Math.random() < this.mutateRate)
-            this.agents[i].hyperParameters[j] += Neuroevolution.Utils.gaussianRandom(0, this.mutatePower);
+            this.agents[i].parameters[j] += Neuroevolution.Utils.gaussianRandom(0, this.mutatePower);
         }
     }
   }
