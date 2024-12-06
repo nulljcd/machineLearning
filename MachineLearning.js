@@ -214,10 +214,10 @@ class MachineLearning {
       }
       let error = new Array();
       for (let l = 0; l < this.numLayers; l++) {
-        let array0 = new Float32Array(this.layerSizes[l]);
+        let errorLayer = new Float32Array(this.layerSizes[l]);
         for (let j = 0; j < this.layerSizes[l]; j++)
-          array0[j] = 0;
-        error.push(array0);
+          errorLayer[j] = 0;
+        error.push(errorLayer);
       }
       let aPrime = this.outputActivation.derivative(zs[this.numLayers - 1]);
       let cPrime = cost.derivative(as[this.numLayers - 1], y);
