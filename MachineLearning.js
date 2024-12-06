@@ -299,12 +299,14 @@ class MachineLearning {
               this.model.weights[l - 1][k][j] -= adjustedLearningRateW * (this.vWMomentum[l - 1][k][j]);
             }
           }
+        }
+        for (let l = 0; l < this.model.numLayers; l++) {
           for (let j = 0; j < this.model.layerSizes[l]; j++) {
-            let gradientB = this.model.gradientB[l - 1][j];
-            this.vB[l - 1][j] = this.beta * this.vB[l - 1][j] + (1 - this.beta) * gradientB ** 2;
-            this.vBMomentum[l - 1][j] = this.momentum * this.vBMomentum[l - 1][j] + (1 - this.momentum) * gradientB;
-            let adjustedLearningRateB = this.eta / (Math.sqrt(this.vB[l - 1][j] + this.epsilon));
-            this.model.biases[l - 1][j] -= adjustedLearningRateB * (this.vBMomentum[l - 1][j]);
+            let gradientB = this.model.gradientB[l][j];
+            this.vB[l][j] = this.beta * this.vB[l][j] + (1 - this.beta) * gradientB ** 2;
+            this.vBMomentum[l][j] = this.momentum * this.vBMomentum[l][j] + (1 - this.momentum) * gradientB;
+            let adjustedLearningRateB = this.eta / (Math.sqrt(this.vB[l][j] + this.epsilon));
+            this.model.biases[l][j] -= adjustedLearningRateB * (this.vBMomentum[l][j]);
           }
         }
       }
