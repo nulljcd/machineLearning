@@ -7,8 +7,7 @@ Exporing machine learning.
 - neuroevolution
 
 ## online demos 
-- curve fitting (coming soon)
-- car driving simulation with neuroevolution (coming later)
+
 
 ## notes:
 - easily portable to any lang
