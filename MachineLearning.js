@@ -282,7 +282,7 @@ class MachineLearning {
         this.eta = eta;
       }
 
-      applyGradients() {
+      step() {
         for (let l = 1; l < this.model.numLayers; l++) {
           for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
             for (let j = 0; j < this.model.layerSizes[l]; j++)
@@ -314,7 +314,7 @@ class MachineLearning {
         this.t = 0;
       }
 
-      applyGradients() {
+      step() {
         this.t++;
 
         for (let l = 1; l < this.model.numLayers; l++) {
