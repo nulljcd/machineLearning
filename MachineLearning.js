@@ -3,7 +3,7 @@ class MachineLearning {
   static Utils = class {
     static gaussianRandom(mean, stddev) {
       // https://stackoverflow.com/questions/25582882/javascript-math-random-normal-distribution-gaussian-bell-curve
-      return Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random()) + mean * stddev;
+      return Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random()) * stddev + mean;
     }
   }
 
