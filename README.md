@@ -18,7 +18,7 @@ let data = [
 
 
 
-// create AI
+// create the AI
 let model = new MachineLearning.Model(
   [2, 6, 2], // layer sizes
   new MachineLearning.Activation.LeakyReLu(0.1), // activation
