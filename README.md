@@ -52,3 +52,6 @@ for (let i = 0; i < 100; i++)
 for (let j = 0; j < data.length; j++)
   console.log(model.feedForward(data[j][0]));
 ```
+
+### curve fitting demo
+https://nulljcd.github.io/machineLearning/curveFitting
