@@ -249,13 +249,27 @@ class MachineLearning {
       for (let l = 1; l < this.numLayers; l++) {
         for (let k = 0; k < this.layerSizes[l - 1]; k++) {
           for (let j = 0; j < this.layerSizes[l]; j++)
-            this.gradientW[l - 1][k][j] = as[l - 1][k] * error[l][j];
+            this.gradientW[l - 1][k][j] += as[l - 1][k] * error[l][j];
         }
       }
 
       for (let l = 0; l < this.numLayers; l++) {
         for (let j = 0; j < this.layerSizes[l]; j++)
-          this.gradientB[l][j] = error[l][j];
+          this.gradientB[l][j] += error[l][j];
+      }
+    }
+
+    zeroGradients() {
+      for (let l = 1; l < this.numLayers; l++) {
+        for (let k = 0; k < this.layerSizes[l - 1]; k++) {
+          for (let j = 0; j < this.layerSizes[l]; j++)
+            this.gradientW[l - 1][k][j] = 0;
+        }
+      }
+
+      for (let l = 0; l < this.numLayers; l++) {
+        for (let j = 0; j < this.layerSizes[l]; j++)
+          this.gradientB[l][j] = 0;
       }
     }
   }
