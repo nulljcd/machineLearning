@@ -6,10 +6,10 @@ Exporing machine learning.
 - Well structured and modularized for maintenance and expansion
 - No external libraries
 
-### example usage
-simple xor gate
+### Example usage
+Simple xor gate
 ```js
-// create data
+// Create data
 let data = [
   [[0, 0], [0, 1]],
   [[1, 0], [1, 0]],
@@ -18,7 +18,7 @@ let data = [
 
 
 
-// create the AI
+// Create the AI
 let model = new MachineLearning.Model(
   [2, 6, 2], // layer sizes
   new MachineLearning.Activation.LeakyReLu(0.1), // activation
@@ -40,17 +40,17 @@ let optimizer = new MachineLearning.Optimizer.Adam(
 
 
 
-// setup
+// Setup
 model.initialize();
 
-// train
+// Train
 for (let i = 0; i < 100; i++)
   for (let j = 0; j < data.length; j++) {
     model.backPropagate(data[j][0], data[j][1], cost);
     optimizer.applyGradients();
   }
 
-// evaluate
+// Evaluate
 for (let j = 0; j < data.length; j++)
   console.log(model.feedForward(data[j][0]));
 ```
