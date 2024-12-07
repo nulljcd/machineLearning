@@ -2,9 +2,7 @@
 Exporing machine learning.
 
 ## MachineLearning.js overview
-- A good base for use ONLY with vanilla neural networks
-- Well structured and modularized for maintenance and expansion
-- No external libraries
+This is a good starting point for building basic neural networks in JavaScript. However, for practical, large-scale, or real-world applications, you would face performance issues, a lack of modern features, and limited flexibility. For any serious use cases, you would likely need to integrate this with more sophisticated libraries or languages designed for high-performance numerical computation.
 
 ### Example usage
 Simple xor gate
