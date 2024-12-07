@@ -29,7 +29,7 @@ let model = new MachineLearning.Model(
 
 let cost = new MachineLearning.Cost.MeanSquaredError();
 
-let optimizer = new MachineLearning.Optimizer.AdamW(
+let optimizer = new MachineLearning.Optimizer.Adam(
   model, // model
   0.03, // eta
   0.9, // beta1
