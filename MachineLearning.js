@@ -12,17 +12,15 @@ class MachineLearning {
     static ReLu = class {
       compute(z) {
         let a = new Float32Array(z.length);
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           a[j] = z[j] > 0 ? z[j] : 0;
-        }
         return a;
       }
 
       derivative(z) {
         let d = new Float32Array(z.length);
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           d[j] = z[j] > 0 ? 1 : 0;
-        }
         return d;
       }
     }
@@ -34,17 +32,15 @@ class MachineLearning {
 
       compute(z) {
         let a = new Float32Array(z.length);
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           a[j] = z[j] > 0 ? z[j] : z[j] * this.alpha;
-        }
         return a;
       }
 
       derivative(z) {
         let d = new Float32Array(z.length);
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           d[j] = z[j] > 0 ? 1 : this.alpha;
-        }
         return d;
       }
     }
@@ -52,9 +48,8 @@ class MachineLearning {
     static SiLu = class {
       compute(z) {
         let a = new Float32Array(z.length);
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           a[j] = z[j] / (1 + Math.exp(-z[j]));
-        }
         return a;
       }
 
@@ -82,9 +77,8 @@ class MachineLearning {
       derivative(z) {
         let a = this.compute(z);
         let d = new Float32Array(z.length);
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           d[j] = 1 - a[j] * a[j];
-        }
         return d;
       }
     }
@@ -93,21 +87,18 @@ class MachineLearning {
       compute(z) {
         let a = new Float32Array(z.length);
         let expSum = 0;
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           expSum += Math.exp(z[j]);
-        }
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           a[j] = Math.exp(z[j]) / expSum;
-        }
         return a;
       }
 
       derivative(z) {
         let d = new Float32Array(z.length);
         let expSum = 0;
-        for (let j = 0; j < z.length; j++) {
+        for (let j = 0; j < z.length; j++)
           expSum += Math.exp(z[j]);
-        }
         for (let j = 0; j < z.length; j++) {
           let exp = Math.exp(z[j]);
           d[j] = (exp * expSum - exp * exp) / (expSum * expSum);
@@ -131,9 +122,8 @@ class MachineLearning {
 
       derivative(a, y) {
         let d = new Float32Array(a.length);
-        for (let j = 0; j < a.length; j++) {
+        for (let j = 0; j < a.length; j++)
           d[j] = a[j] - y[j];
-        }
         return d;
       }
     }
@@ -145,9 +135,8 @@ class MachineLearning {
       initialize(weights, layerSizes) {
         for (let l = 1; l < layerSizes.length; l++) {
           for (let j = 0; j < layerSizes[l]; j++) {
-            for (let k = 0; k < layerSizes[l - 1]; k++) {
+            for (let k = 0; k < layerSizes[l - 1]; k++)
               weights[l - 1][k][j] = MachineLearning.Utils.gaussianRandom(0, 1) / Math.sqrt(layerSizes[l - 1]);
-            }
           }
         }
       }
@@ -157,9 +146,8 @@ class MachineLearning {
       initialize(weights, layerSizes) {
         for (let l = 1; l < layerSizes.length; l++) {
           for (let j = 0; j < layerSizes[l]; j++) {
-            for (let k = 0; k < layerSizes[l - 1]; k++) {
+            for (let k = 0; k < layerSizes[l - 1]; k++)
               weights[l - 1][k][j] = MachineLearning.Utils.gaussianRandom(0, 1) / Math.sqrt(layerSizes[l]);
-            }
           }
         }
       }
@@ -171,9 +159,8 @@ class MachineLearning {
     static Zero = class {
       initialize(biases, layerSizes) {
         for (let l = 0; l < layerSizes.length; l++) {
-          for (let j = 0; j < layerSizes[l]; j++) {
+          for (let j = 0; j < layerSizes[l]; j++)
             biases[l][j] = 0;
-          }
         }
       }
     }
@@ -185,9 +172,8 @@ class MachineLearning {
 
       initialize(biases, layerSizes) {
         for (let l = 0; l < layerSizes.length; l++) {
-          for (let j = 0; j < layerSizes[l]; j++) {
+          for (let j = 0; j < layerSizes[l]; j++)
             biases[l][j] = this.value;
-          }
         }
       }
     }
@@ -202,30 +188,10 @@ class MachineLearning {
       this.biasInitializer = biasInitializer;
 
       this.numLayers = this.layerSizes.length;
-      this.weights = new Array();
-      for (let l = 1; l < this.numLayers; l++) {
-        let weightLayer = new Array();
-        for (let k = 0; k < this.layerSizes[l - 1]; k++) {
-          weightLayer.push(new Float32Array(this.layerSizes[l]));
-        }
-        this.weights.push(weightLayer);
-      }
-      this.biases = new Array();
-      for (let l = 0; l < this.numLayers; l++) {
-        this.biases.push(new Float32Array(this.layerSizes[l]));
-      }
-      this.gradientW = new Array();
-      for (let l = 1; l < this.numLayers; l++) {
-        let gradientWLayer = new Array();
-        for (let k = 0; k < this.layerSizes[l - 1]; k++) {
-          gradientWLayer.push(new Float32Array(this.layerSizes[l]));
-        }
-        this.gradientW.push(gradientWLayer);
-      }
-      this.gradientB = new Array();
-      for (let l = 0; l < this.numLayers; l++) {
-        this.gradientB.push(new Float32Array(this.layerSizes[l]));
-      }
+      this.weights = Array.from({ length: this.numLayers - 1 }, (_, l) => Array.from({ length: this.layerSizes[l] }, () => new Float32Array(this.layerSizes[l + 1])));
+      this.biases = Array.from({ length: this.numLayers }, (_, l) => new Float32Array(this.layerSizes[l]));
+      this.gradientW = Array.from({ length: this.numLayers - 1 }, (_, l) => Array.from({ length: this.layerSizes[l] }, () => new Float32Array(this.layerSizes[l + 1])));
+      this.gradientB = Array.from({ length: this.numLayers }, (_, l) => new Float32Array(this.layerSizes[l]));
     }
 
     initialize() {
@@ -238,9 +204,8 @@ class MachineLearning {
         let z = new Float32Array(this.layerSizes[l]);
         for (let j = 0; j < this.layerSizes[l]; j++) {
           z[j] = this.biases[l][j];
-          for (let k = 0; k < this.layerSizes[l - 1]; k++) {
+          for (let k = 0; k < this.layerSizes[l - 1]; k++)
             z[j] += a[k] * this.weights[l - 1][k][j];
-          }
         }
         a = l !== this.numLayers - 1 ? this.activation.compute(z) : this.outputActivation.compute(z);
       }
@@ -255,55 +220,42 @@ class MachineLearning {
         let z = new Float32Array(this.layerSizes[l]);
         for (let j = 0; j < this.layerSizes[l]; j++) {
           z[j] = this.biases[l][j];
-          for (let k = 0; k < this.layerSizes[l - 1]; k++) {
+          for (let k = 0; k < this.layerSizes[l - 1]; k++)
             z[j] += a[k] * this.weights[l - 1][k][j];
-          }
         }
         a = l !== this.numLayers - 1 ? this.activation.compute(z) : this.outputActivation.compute(z);
         zs.push(z);
         as.push(a);
       }
 
-      let error = new Array();
-      for (let l = 0; l < this.numLayers; l++) {
-        let errorLayer = new Float32Array(this.layerSizes[l]);
-        for (let j = 0; j < this.layerSizes[l]; j++) {
-          errorLayer[j] = 0;
-        }
-        error.push(errorLayer);
-      }
+      let error = Array.from({ length: this.numLayers }, (_, l) => new Float32Array(this.layerSizes[l]));
 
       let aPrime = this.outputActivation.derivative(zs[this.numLayers - 1]);
       let cPrime = cost.derivative(as[this.numLayers - 1], y);
-      for (let j = 0; j < this.layerSizes[this.numLayers - 1]; j++) {
+      for (let j = 0; j < this.layerSizes[this.numLayers - 1]; j++)
         error[this.numLayers - 1][j] = aPrime[j] * cPrime[j];
-      }
 
       for (let l = this.numLayers - 1; l > 1; l--) {
         let sum = new Float32Array(this.layerSizes[l - 1]);
         for (let k = 0; k < this.layerSizes[l - 1]; k++) {
-          for (let j = 0; j < this.layerSizes[l]; j++) {
+          for (let j = 0; j < this.layerSizes[l]; j++)
             sum[k] += this.weights[l - 1][k][j] * error[l][j];
-          }
         }
         let aPrime = this.activation.derivative(zs[l - 1]);
-        for (let k = 0; k < this.layerSizes[l - 1]; k++) {
+        for (let k = 0; k < this.layerSizes[l - 1]; k++)
           error[l - 1][k] = sum[k] * aPrime[k];
-        }
       }
 
       for (let l = 1; l < this.numLayers; l++) {
         for (let k = 0; k < this.layerSizes[l - 1]; k++) {
-          for (let j = 0; j < this.layerSizes[l]; j++) {
+          for (let j = 0; j < this.layerSizes[l]; j++)
             this.gradientW[l - 1][k][j] = as[l - 1][k] * error[l][j];
-          }
         }
       }
 
       for (let l = 0; l < this.numLayers; l++) {
-        for (let j = 0; j < this.layerSizes[l]; j++) {
+        for (let j = 0; j < this.layerSizes[l]; j++)
           this.gradientB[l][j] = error[l][j];
-        }
       }
     }
   }
@@ -319,16 +271,14 @@ class MachineLearning {
       applyGradients() {
         for (let l = 1; l < this.model.numLayers; l++) {
           for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
-            for (let j = 0; j < this.model.layerSizes[l]; j++) {
+            for (let j = 0; j < this.model.layerSizes[l]; j++)
               this.model.weights[l - 1][k][j] -= this.model.gradientW[l - 1][k][j] * this.eta;
-            }
           }
         }
 
         for (let l = 0; l < this.model.numLayers; l++) {
-          for (let j = 0; j < this.model.layerSizes[l]; j++) {
+          for (let j = 0; j < this.model.layerSizes[l]; j++)
             this.model.biases[l][j] -= this.model.gradientB[l][j] * this.eta;
-          }
         }
       }
     }
@@ -342,26 +292,10 @@ class MachineLearning {
         this.epsilon = epsilon;
         this.lambda = lambda;
 
-        this.mW = new Array();
-        this.vW = new Array();
-        this.mB = new Array();
-        this.vB = new Array();
-
-        for (let l = 1; l < this.model.numLayers; l++) {
-          let mWLayer = new Array();
-          let vWLayer = new Array();
-          for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
-            mWLayer.push(new Float32Array(this.model.layerSizes[l]));
-            vWLayer.push(new Float32Array(this.model.layerSizes[l]));
-          }
-          this.mW.push(mWLayer);
-          this.vW.push(vWLayer);
-        }
-
-        for (let l = 0; l < this.model.numLayers; l++) {
-          this.mB.push(new Float32Array(this.model.layerSizes[l]));
-          this.vB.push(new Float32Array(this.model.layerSizes[l]));
-        }
+        this.mW = Array.from({ length: this.model.numLayers - 1 }, (_, l) => Array.from({ length: this.model.layerSizes[l] }, () => new Float32Array(this.model.layerSizes[l + 1])));
+        this.vW = Array.from({ length: this.model.numLayers - 1 }, (_, l) => Array.from({ length: this.model.layerSizes[l] }, () => new Float32Array(this.model.layerSizes[l + 1])));
+        this.mB = Array.from({ length: this.model.numLayers }, (_, l) => new Float32Array(this.model.layerSizes[l]));
+        this.vB = Array.from({ length: this.model.numLayers }, (_, l) => new Float32Array(this.model.layerSizes[l]));
 
         this.t = 0;
       }
