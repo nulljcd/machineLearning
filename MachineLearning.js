@@ -260,60 +260,6 @@ class MachineLearning {
       }
     }
 
-    static RMSProp = class {
-      constructor(model, eta, beta, rho, epsilon, lambda) {
-        this.model = model;
-        this.eta = eta;
-        this.beta = beta;
-        this.rho = rho;
-        this.epsilon = epsilon;
-        this.lambda = lambda;
-
-        this.vW = new Array();
-        this.vB = new Array();
-        this.vWMomentum = new Array();
-        this.vBMomentum = new Array();
-        for (let l = 1; l < this.model.numLayers; l++) {
-          let vWLayer = new Array();
-          let vWMomentumLayer = new Array();
-          for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
-            vWLayer.push(new Float32Array(this.model.layerSizes[l]));
-            vWMomentumLayer.push(new Float32Array(this.model.layerSizes[l]));
-          }
-          this.vW.push(vWLayer);
-          this.vWMomentum.push(vWMomentumLayer);
-        }
-        for (let l = 0; l < this.model.numLayers; l++) {
-          this.vB.push(new Float32Array(this.model.layerSizes[l]));
-          this.vBMomentum.push(new Float32Array(this.model.layerSizes[l]));
-        }
-      }
-
-      applyGradients() {
-        for (let l = 1; l < this.model.numLayers; l++) {
-          for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
-            for (let j = 0; j < this.model.layerSizes[l]; j++) {
-              let gradientW = this.model.gradientW[l - 1][k][j];
-              gradientW += this.lambda * this.model.weights[l - 1][k][j];
-              this.vW[l - 1][k][j] = this.beta * this.vW[l - 1][k][j] + (1 - this.beta) * gradientW ** 2;
-              this.vWMomentum[l - 1][k][j] = this.rho * this.vWMomentum[l - 1][k][j] + (1 - this.rho) * gradientW;
-              let adjustedLearningRateW = this.eta / (Math.sqrt(this.vW[l - 1][k][j] + this.epsilon));
-              this.model.weights[l - 1][k][j] -= adjustedLearningRateW * (this.vWMomentum[l - 1][k][j]);
-            }
-          }
-        }
-        for (let l = 0; l < this.model.numLayers; l++) {
-          for (let j = 0; j < this.model.layerSizes[l]; j++) {
-            let gradientB = this.model.gradientB[l][j];
-            this.vB[l][j] = this.beta * this.vB[l][j] + (1 - this.beta) * gradientB ** 2;
-            this.vBMomentum[l][j] = this.rho * this.vBMomentum[l][j] + (1 - this.rho) * gradientB;
-            let adjustedLearningRateB = this.eta / (Math.sqrt(this.vB[l][j] + this.epsilon));
-            this.model.biases[l][j] -= adjustedLearningRateB * (this.vBMomentum[l][j]);
-          }
-        }
-      }
-    }
-
     static Adam = class {
       constructor(model, eta, beta1, beta2, epsilon, lambda) {
         this.model = model;
@@ -347,66 +293,6 @@ class MachineLearning {
       applyGradients() {
         this.t++;
 
-        for (let l = 1; l < this.model.numLayers; l++) {
-          for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
-            for (let j = 0; j < this.model.layerSizes[l]; j++) {
-              let gradientW = this.model.gradientW[l - 1][k][j];
-              gradientW += this.lambda * this.model.weights[l - 1][k][j];
-              this.mW[l - 1][k][j] = this.beta1 * this.mW[l - 1][k][j] + (1 - this.beta1) * gradientW;
-              this.vW[l - 1][k][j] = this.beta2 * this.vW[l - 1][k][j] + (1 - this.beta2) * gradientW ** 2;
-              let mHatW = this.mW[l - 1][k][j] / (1 - Math.pow(this.beta1, this.t));
-              let vHatW = this.vW[l - 1][k][j] / (1 - Math.pow(this.beta2, this.t));
-              let adjustedLearningRateW = this.eta / (Math.sqrt(vHatW) + this.epsilon);
-              this.model.weights[l - 1][k][j] -= adjustedLearningRateW * mHatW;
-            }
-          }
-        }
-        for (let l = 0; l < this.model.numLayers; l++) {
-          for (let j = 0; j < this.model.layerSizes[l]; j++) {
-            let gradientB = this.model.gradientB[l][j];
-            this.mB[l][j] = this.beta1 * this.mB[l][j] + (1 - this.beta1) * gradientB;
-            this.vB[l][j] = this.beta2 * this.vB[l][j] + (1 - this.beta2) * gradientB ** 2;
-            let mHatB = this.mB[l][j] / (1 - Math.pow(this.beta1, this.t));
-            let vHatB = this.vB[l][j] / (1 - Math.pow(this.beta2, this.t));
-            let adjustedLearningRateB = this.eta / (Math.sqrt(vHatB) + this.epsilon);
-            this.model.biases[l][j] -= adjustedLearningRateB * mHatB;
-          }
-        }
-      }
-    }
-
-    static AdamW = class {
-      constructor(model, eta, beta1, beta2, epsilon, lambda) {
-        this.model = model;
-        this.eta = eta;
-        this.beta1 = beta1;
-        this.beta2 = beta2;
-        this.epsilon = epsilon;
-        this.lambda = lambda;
-    
-        this.mW = new Array();
-        this.vW = new Array();
-        this.mB = new Array();
-        this.vB = new Array();
-        for (let l = 1; l < this.model.numLayers; l++) {
-          let mWLayer = new Array();
-          let vWLayer = new Array();
-          for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
-            mWLayer.push(new Float32Array(this.model.layerSizes[l]));
-            vWLayer.push(new Float32Array(this.model.layerSizes[l]));
-          }
-          this.mW.push(mWLayer);
-          this.vW.push(vWLayer);
-        }
-        for (let l = 0; l < this.model.numLayers; l++) {
-          this.mB.push(new Float32Array(this.model.layerSizes[l]));
-          this.vB.push(new Float32Array(this.model.layerSizes[l]));
-        }
-        this.t = 0;
-      }
-    
-      applyGradients() {
-        this.t++;
         for (let l = 1; l < this.model.numLayers; l++) {
           for (let k = 0; k < this.model.layerSizes[l - 1]; k++) {
             for (let j = 0; j < this.model.layerSizes[l]; j++) {
