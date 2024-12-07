@@ -49,6 +49,26 @@ class MachineLearning {
       }
     }
 
+    static SiLu = class {
+      compute(z) {
+        let a = new Float32Array(z.length);
+        for (let j = 0; j < z.length; j++) {
+          a[j] = z[j] / (1 + Math.exp(-z[j]));
+        }
+        return a;
+      }
+
+      derivative(z) {
+        let a = this.compute(z);
+        let d = new Float32Array(z.length);
+        for (let j = 0; j < z.length; j++) {
+          let sig = 1 / (1 + Math.exp(-z[j]));
+          d[j] = z[j] * sig * (1 - sig) + sig;
+        }
+        return d;
+      }
+    }
+
     static TanH = class {
       compute(z) {
         let a = new Float32Array(z.length);
@@ -60,10 +80,10 @@ class MachineLearning {
       }
 
       derivative(z) {
-        let t = this.compute(z);
+        let a = this.compute(z);
         let d = new Float32Array(z.length);
         for (let j = 0; j < z.length; j++) {
-          d[j] = 1 - t[j] * t[j];
+          d[j] = 1 - a[j] * a[j];
         }
         return d;
       }
