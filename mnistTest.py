@@ -24,11 +24,11 @@ with open("mnist/test.txt", "r") as file:
 
 
 model = Model(
-  [784, 128, 10],
-  Activation.ReLu(),
-  Activation.SoftMax(),
-  WeightInitializer.He(),
-  BiasInitializer.Zero())
+  layerSizes=[784, 128, 10],
+  activation=Activation.ReLu(),
+  outputActivation=Activation.SoftMax(),
+  weightInitializer=WeightInitializer.He(),
+  biasInitializer=BiasInitializer.Zero())
 
 loss = Loss.CrossEntropy()
 
