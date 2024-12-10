@@ -29,7 +29,6 @@ class Activation:
       return (expValues * (sumExp - expValues)) / (sumExp ** 2)
 
 
-
 class Loss:
   class MeanSquaredError:
     def compute(self, a, y):
@@ -65,6 +64,14 @@ class BiasInitializer:
     def set(self, biases, layerSizes):
       for l in range(1, len(layerSizes)):
         biases[l - 1] = np.zeros(layerSizes[l])
+
+  class Constant:
+    def __init__(self, value):
+      self.value = value
+
+    def set(self, biases, layerSizes):
+      for l in range(1, len(layerSizes)):
+        biases[l - 1] = np.ones(layerSizes[l]) * self.value
 
 
 class Model:
